@@ -9,16 +9,16 @@ package com.pramati.bank.tokening.system.utils;
  */
 public enum CustomerType {
 
-	PRIMIUM {
+	PREMIUM {
 		@Override
 		public String toString() {
-			return "primium";
+			return "PREMIUM";
 		}
 	},
 	REGULAR {
 		@Override
 		public String toString() {
-			return "regular";
+			return "PREMIUM";
 		}
 	}
 }

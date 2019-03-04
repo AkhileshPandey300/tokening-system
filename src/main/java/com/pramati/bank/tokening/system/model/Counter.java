@@ -21,26 +21,26 @@ public class Counter extends BaseModel implements Serializable {
 	private static final long serialVersionUID = -5199892356132163497L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private long id;
 	@Column(name = "service_id")
-	private int serviceId;
+	private long serviceId;
 	@Column(name = "is_available")
 	private boolean isAvailable;
 	private String type;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getServiceId() {
+	public long getServiceId() {
 		return serviceId;
 	}
 
-	public void setServiceId(int serviceId) {
+	public void setServiceId(long serviceId) {
 		this.serviceId = serviceId;
 	}
 

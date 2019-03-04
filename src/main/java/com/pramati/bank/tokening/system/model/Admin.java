@@ -1,8 +1,6 @@
 package com.pramati.bank.tokening.system.model;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -13,18 +11,21 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "services")
+@Table(name = "admin")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdBy", "updatedBy", "createdAt", "updatedAt" }, allowGetters = true)
-public class Service extends BaseModel implements Serializable {
+public class Admin implements Serializable {
 
-	private static final long serialVersionUID = -3905848151678850003L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6805786507968108417L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String name;
-	@Column(name = "is_multi")
-	private boolean isMulti;
+	private String role;
 
 	public long getId() {
 		return id;
@@ -42,15 +43,12 @@ public class Service extends BaseModel implements Serializable {
 		this.name = name;
 	}
 
-	public boolean isMulti() {
-		return isMulti;
+	public String getRole() {
+		return role;
 	}
 
-	public void setMulti(boolean isMulti) {
-		this.isMulti = isMulti;
-	}
-
-	public Service() {
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

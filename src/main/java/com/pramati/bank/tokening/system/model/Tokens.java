@@ -8,16 +8,19 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
 @Entity
 @Table(name = "token")
+@Builder
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = { "createdBy", "updatedBy", "createdAt", "updatedAt" }, allowGetters = true)
 public class Tokens extends BaseModel implements Serializable {
@@ -25,24 +28,22 @@ public class Tokens extends BaseModel implements Serializable {
 	private static final long serialVersionUID = 3532857251124298421L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private long id;
 	@Column(name = "token_no")
 	private String tokenNo;
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
-	@ManyToOne
-	@JoinColumn(name = "counter_id")
-	private Counter counter;
+	@Column(name = "customer_id")
+	private long customerId;
+	@Column(name = "counter_id")
+	private long counterId;
 
 	private String status;
 	private String comment;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -52,22 +53,6 @@ public class Tokens extends BaseModel implements Serializable {
 
 	public void setTokenNo(String tokenNo) {
 		this.tokenNo = tokenNo;
-	}
-
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
-	public Counter getCounter() {
-		return counter;
-	}
-
-	public void setCounter(Counter counter) {
-		this.counter = counter;
 	}
 
 	public String getStatus() {
@@ -88,5 +73,21 @@ public class Tokens extends BaseModel implements Serializable {
 
 	public Tokens() {
 
+	}
+
+	public long getCounterId() {
+		return counterId;
+	}
+
+	public void setCounterId(long counterId) {
+		this.counterId = counterId;
+	}
+
+	public long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
 	}
 }
