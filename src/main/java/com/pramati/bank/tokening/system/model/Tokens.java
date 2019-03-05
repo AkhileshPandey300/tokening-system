@@ -1,6 +1,7 @@
 package com.pramati.bank.tokening.system.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,8 +25,8 @@ import lombok.Builder;
 @Builder
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = { "createdBy", "updatedBy", "createdAt", "updatedAt" }, allowGetters = true)
-public class Tokens extends BaseModel implements Serializable {
+@JsonIgnoreProperties(value = { "createdBy", "updatedBy", "updatedAt" }, allowGetters = false)
+public class Tokens implements Serializable {
 
 	private static final long serialVersionUID = 3532857251124298421L;
 	@Id
@@ -35,6 +38,13 @@ public class Tokens extends BaseModel implements Serializable {
 	private long customerId;
 	@Column(name = "counter_id")
 	private long counterId;
+
+	@Column(name = "service_id")
+	private long serviceId;
+
+	@Column(name = "created_at")
+	@Temporal(value = TemporalType.TIMESTAMP)
+	private Date createdAt;
 
 	private String status;
 	private String comment;
@@ -89,5 +99,13 @@ public class Tokens extends BaseModel implements Serializable {
 
 	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
+	}
+
+	public long getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(long serviceId) {
+		this.serviceId = serviceId;
 	}
 }

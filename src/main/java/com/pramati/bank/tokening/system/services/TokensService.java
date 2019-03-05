@@ -15,6 +15,6 @@ public interface TokensService {
 
 	public List<Tokens> getTokensByCounter(long counterId);
 
-	public Tokens updateToken(Tokens token, long adminId) throws RuntimeException;
+	public Tokens updateToken(Tokens token, long adminId ,long tokenId) throws RuntimeException;
 
 }

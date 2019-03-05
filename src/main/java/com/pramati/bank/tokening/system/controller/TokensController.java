@@ -36,24 +36,25 @@ public class TokensController {
 		this.tokenService = tokenService;
 	}
 
-	@PostMapping("/tokens/{mobile}/{id}")
-	public Tokens getToken(@PathVariable(value = "mobile") String mobile, @PathVariable(value = "id") int serviceId)
+	@PostMapping("/tokens/{mobile}/{serviceId}")
+	public Tokens getToken(@PathVariable(value = "mobile") String mobile,
+			@PathVariable(value = "serviceId") int serviceId)
 			throws CustomerNotFoundException, CounterNotFoundException {
 
 		return this.tokenService.getToken(mobile, serviceId);
 
 	}
 
-	@GetMapping("/counters/{id}/tokens")
-//	@GetMapping("/tokens/{id}")
-	public List<Tokens> getCounterTokens(@PathVariable(value = "id") long counterId) {
+	@GetMapping("/counters/{counterId}/tokens")
+	public List<Tokens> getCounterTokens(@PathVariable(value = "counterId") long counterId) {
 		return this.tokenService.getTokensByCounter(counterId);
 
 	}
 
-	@PutMapping("/counters/tokens/{id}")
-	public Tokens updateToken(@Valid @RequestBody Tokens token, @PathVariable(value = "id") long adminId) {
-		return this.tokenService.updateToken(token, adminId);
+	@PutMapping("/counters/tokens/{adminId}/{tokenId}")
+	public Tokens updateToken(@Valid @RequestBody Tokens token, @PathVariable(value = "adminId") long adminId,
+			@PathVariable(value = "tokenId") long tokenId) {
+		return this.tokenService.updateToken(token, adminId, tokenId);
 
 	}
 

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ import com.pramati.bank.tokening.system.services.CounterService;
  *
  */
 @RestController
-@RequestMapping("/counters")
+@RequestMapping("")
 public class CounterController {
 
 	@Autowired
@@ -33,12 +34,13 @@ public class CounterController {
 		this.counterService = counterService;
 	}
 
-	@PutMapping
-	public Counter update(@Valid @RequestBody Counter counter) throws CounterNotFoundException {
-		return counterService.updateCounter(counter);
+	@PutMapping("/counters/{counterId}")
+	public Counter update(@Valid @RequestBody Counter counter, @PathVariable(value = "counterId") long counterId)
+			throws CounterNotFoundException {
+		return counterService.updateCounter(counter,counterId);
 	}
 
-	@GetMapping
+	@GetMapping("/counters")
 	public List<Counter> getCounters() {
 		return counterService.getCounters();
 

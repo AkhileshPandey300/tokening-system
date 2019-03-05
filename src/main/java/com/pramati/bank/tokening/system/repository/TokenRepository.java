@@ -14,8 +14,9 @@ import com.pramati.bank.tokening.system.model.Tokens;
 @Repository
 public interface TokenRepository extends JpaRepository<Tokens, Long> {
 
-	@Query("SELECT t.tokenNo FROM Tokens t where t.counterId = :counterId "
-			+ "and date_format(date(created_at),'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') and status = 'OPEN'")
+	@Query("SELECT tok.tokenNo FROM Tokens tok INNER JOIN Customer cust ON tok.customerId = cust.id where tok.counterId = :counterId "
+			+ "and date_format(date(tok.createdAt),'%Y-%m-%d') = date_format(now(),'%Y-%m-%d') "
+			+ "and tok.status = 'OPEN' ORDER BY cust.customerType ASC , tok.id ASC")
 	public Stream<Tokens> findByCounterId(long counterId);
 
 }

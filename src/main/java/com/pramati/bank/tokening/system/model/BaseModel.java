@@ -2,6 +2,8 @@ package com.pramati.bank.tokening.system.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class BaseModel {
 
 	private String createdBy;

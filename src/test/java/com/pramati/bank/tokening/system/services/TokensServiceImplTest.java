@@ -3,9 +3,9 @@
  */
 package com.pramati.bank.tokening.system.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.transaction.annotation.Transactional;
-
+import org.mockito.Spy;
 import com.pramati.bank.tokening.system.model.Tokens;
 import com.pramati.bank.tokening.system.repository.AdminRepository;
 import com.pramati.bank.tokening.system.repository.CounterRepository;
@@ -35,7 +34,7 @@ class TokensServiceImplTest {
 	@Mock
 	TokenRepository tokenRepository;
 
-	@Mock
+	@Spy
 	CustomerRepository customerRepository;
 
 	@Mock
@@ -66,9 +65,8 @@ class TokensServiceImplTest {
 	 * {@link com.pramati.bank.tokening.system.services.TokensServiceImpl#getToken(java.lang.String, long)}.
 	 */
 	@Test
-	@Transactional
 	void testGetToken() {
-		Tokens resultTokens = tokensServiceImpl.getToken("8693896061", 1L);
+		Tokens resultTokens = this.tokensServiceImpl.getToken("8693896061", 1L);
 		assertNotNull(resultTokens);
 		assertEquals(token.getId(), resultTokens.getId());
 		assertEquals(token.getTokenNo(), resultTokens.getTokenNo());
@@ -99,9 +97,9 @@ class TokensServiceImplTest {
 		Assertions.assertThrows(Exception.class,
 
 				() -> {
-					tokensServiceImpl.updateToken(token, 1L);
+					tokensServiceImpl.updateToken(token, 1L, 1L);
 				});
-		Tokens resultTokens = tokensServiceImpl.updateToken(token, 1L);
+		Tokens resultTokens = tokensServiceImpl.updateToken(token, 1L, 1L);
 
 		assertNotNull(resultTokens);
 		assertEquals(token.getTokenNo(), resultTokens.getTokenNo());

@@ -98,13 +98,13 @@ class TokensControllerTest {
 	void testUpdateToken() throws JsonProcessingException, Exception {
 
 		this.mockMvc
-				.perform(put("/counters/tokens/{id}", 1)
+				.perform(put("/counters/tokens/{id}/{tokenId}", 1, 1)
 						.content(this.objectMapper.writeValueAsBytes(Tokens.builder().id(1).comment("").counterId(1)
 								.customerId(1).status("OPEN").tokenNo("AA1").build()))
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
-		verify(this.tokensService, times(1)).updateToken(any(Tokens.class), any(Long.class));
+		verify(this.tokensService, times(1)).updateToken(any(Tokens.class), any(Long.class), any(Long.class));
 		verifyNoMoreInteractions(this.tokensService);
 
 	}

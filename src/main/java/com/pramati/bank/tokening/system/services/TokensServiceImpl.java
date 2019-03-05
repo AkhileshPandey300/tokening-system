@@ -7,17 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.transaction.TransactionScoped;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.pramati.bank.tokening.system.exception.CounterNotFoundException;
 import com.pramati.bank.tokening.system.exception.CustomerNotFoundException;
+import com.pramati.bank.tokening.system.exception.TokensNotFoundException;
 import com.pramati.bank.tokening.system.exception.UserNotFoundException;
 import com.pramati.bank.tokening.system.model.Admin;
 import com.pramati.bank.tokening.system.model.Counter;
@@ -26,6 +22,7 @@ import com.pramati.bank.tokening.system.model.Tokens;
 import com.pramati.bank.tokening.system.repository.AdminRepository;
 import com.pramati.bank.tokening.system.repository.CounterRepository;
 import com.pramati.bank.tokening.system.repository.CustomerRepository;
+import com.pramati.bank.tokening.system.repository.ServiceRepository;
 import com.pramati.bank.tokening.system.repository.TokenRepository;
 import com.pramati.bank.tokening.system.utils.TokenStatus;
 import com.pramati.bank.tokening.system.utils.UserEnum;
@@ -47,6 +44,9 @@ public class TokensServiceImpl implements TokensService {
 	private CounterRepository counterRepository;
 
 	@Autowired
+	private ServiceRepository serviceRepository;
+
+	@Autowired
 	private AdminRepository adminRepository;
 
 	public void setAdminRepository(AdminRepository adminRepository) {
@@ -66,12 +66,12 @@ public class TokensServiceImpl implements TokensService {
 	}
 
 	@Override
-	@Transactional(propagation =Propagation.REQUIRED)
+	@Transactional
 	public Tokens getToken(String phone, long serviceId) throws CustomerNotFoundException, CounterNotFoundException {
 		Customer customer = this.customerRepository.findByMobile(phone);
 		Counter counter = null;
 		if (customer != null) {
-			counter = this.counterRepository.findByServiceId(serviceId);
+			counter = this.counterRepository.findCounterByServiceId(serviceId);
 			if (counter == null)
 				throw new CounterNotFoundException("Counter Not Found");
 		} else
@@ -93,15 +93,29 @@ public class TokensServiceImpl implements TokensService {
 
 	@Override
 	@Transactional
-	public Tokens updateToken(Tokens token, long adminId) {
+	public Tokens updateToken(Tokens token, long adminId, long tokenId) {
+		Tokens tokenEntity = tokenRepository.findById(tokenId)
+				.orElseThrow(() -> new TokensNotFoundException("Token Not Found"));
+
 		Optional<Admin> adminOptional = this.adminRepository.findById(adminId);
 		if (!adminOptional.isPresent())
 			throw new UserNotFoundException();
+		
 		String userRole = adminOptional.get().getRole();
 		if (!userRole.equalsIgnoreCase(UserEnum.MANAGER.toString())
 				&& !userRole.equalsIgnoreCase(UserEnum.OPERATOR.toString()))
 			throw new RuntimeException();
 
+		if (!token.getStatus().equalsIgnoreCase(TokenStatus.COMPLETED.toString())
+				|| !token.getStatus().equalsIgnoreCase(TokenStatus.CANCELLED.toString())) {
+			long serviceId = tokenEntity.getServiceId();
+			List<Counter> listOfCounters = this.counterRepository.findMultiCounterByServiceId(serviceId,
+					tokenEntity.getCounterId());
+			if (listOfCounters != null && listOfCounters.size() > 0) {
+				token.setCounterId(listOfCounters.get(0).getId());
+			}
+
+		}
 		return this.tokenRepository.save(token);
 	}
 
@@ -117,7 +131,7 @@ public class TokensServiceImpl implements TokensService {
 	}
 
 	public String tokenNumber() {
-		return RandomStringUtils.randomAlphanumeric(5);
+		return RandomStringUtils.randomAlphanumeric(5).toUpperCase();
 
 	}
 

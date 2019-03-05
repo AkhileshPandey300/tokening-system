@@ -14,7 +14,7 @@ import com.pramati.bank.tokening.system.model.Counter;
  */
 public interface CounterService {
 
-	public Counter updateCounter(Counter counter) throws CounterNotFoundException;
+	public Counter updateCounter(Counter counter,long counterId) throws CounterNotFoundException;
 
 	public List<Counter> getCounters();
 }
