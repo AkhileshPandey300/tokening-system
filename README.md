@@ -89,7 +89,7 @@ role enum('MANAGER','OPERATOR','OTHER') default 'OPERATOR'
 
      Build and run the app using maven
 
-mvn package java -jar target/RequestTracking-1.0.0.jar
+mvn package java -jar target/tokening-system-1.0.0.jar
 
 Alternatively, you can run the app without packaging it using -
 
